@@ -15,6 +15,7 @@ class CuentaTest {
 
         String actual = cuenta.getPersona();
 
+        assertNotNull(actual);
         assertEquals(expected, actual);
     }
 
@@ -25,6 +26,7 @@ class CuentaTest {
         Double expected = 1000.12345;
         Double actual = cuenta.getSaldo().doubleValue();
 
+        assertNotNull(cuenta.getSaldo());
         assertEquals(expected, actual);
         assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
     }
@@ -36,4 +38,33 @@ class CuentaTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    void testDebitoCuenta() {
+        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
+        cuenta.debito(new BigDecimal(100));
+
+        BigDecimal expected = new BigDecimal("900.12345");
+        BigDecimal actual = cuenta.getSaldo();
+
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        assertEquals(900, actual.intValue());
+        assertEquals(expected.toPlainString(), actual.toPlainString());
+    }
+
+    @Test
+    void testCreditoCuenta() {
+        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
+        cuenta.credito(new BigDecimal(100));
+
+        BigDecimal expected = new BigDecimal("1100.12345");
+        BigDecimal actual = cuenta.getSaldo();
+
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+        assertEquals(1100, actual.intValue());
+        assertEquals(expected.toPlainString(), actual.toPlainString());
+    }
+
 }
