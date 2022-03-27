@@ -97,11 +97,12 @@ class CuentaTest {
 
     @Test
     void testRelacionBancoCuentas() {
+        String nombreBanco = "Banco del Estado";
         Cuenta cuenta1 = new Cuenta("John Doe", new BigDecimal("2500"));
         Cuenta cuenta2 = new Cuenta("Andres", new BigDecimal("1500.8989"));
 
         Banco banco = new Banco();
-        banco.setNombre("Banco del Estado");
+        banco.setNombre(nombreBanco);
         banco.addCuenta(cuenta1);
         banco.addCuenta(cuenta2);
 
@@ -110,6 +111,14 @@ class CuentaTest {
         assertEquals("1000.8989", cuenta2.getSaldo().toPlainString());
         assertEquals("3000", cuenta1.getSaldo().toPlainString());
         assertEquals(2, banco.getCuentas().size());
+        assertEquals(nombreBanco, cuenta1.getBanco().getNombre());
+        assertEquals(nombreBanco, cuenta2.getBanco().getNombre());
+        assertTrue(banco.getCuentas()
+                        .stream()
+                        .anyMatch(c -> c.getPersona().equals("John Doe")));
+        assertTrue(banco.getCuentas()
+                        .stream()
+                        .anyMatch(c -> c.getPersona().equals("Andres")));
     }
 
 }

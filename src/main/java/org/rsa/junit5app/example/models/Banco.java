@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,12 @@ public class Banco {
 
     private List<Cuenta> cuentas;
 
+    public Banco() {
+        this.cuentas = new LinkedList<>();
+    }
+
     public void addCuenta(Cuenta cuenta) {
+        cuenta.setBanco(this);
         this.cuentas.add(cuenta);
     }
 
