@@ -1,5 +1,7 @@
 package org.rsa.junit5app.example.models;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
@@ -10,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CuentaTest {
 
     @Test
+    @DisplayName("probando el nombre de la cuenta")
     void testNombreCuenta() {
         String expected = "Andres";
         Cuenta cuenta = new Cuenta(expected, new BigDecimal("1000.12345"));
@@ -21,6 +24,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("probando el saldo de la cuenta")
     void testSaldoCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
 
@@ -33,6 +37,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("probando equals entre cuentas")
     void testReferenciaCuenta() {
         Cuenta expected = new Cuenta("John Doe", new BigDecimal("8900.9997"));
         Cuenta actual   = new Cuenta("John Doe", new BigDecimal("8900.9997"));
@@ -41,6 +46,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("probando el debito de la cuenta")
     void testDebitoCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
         cuenta.debito(new BigDecimal(100));
@@ -55,6 +61,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("probando el crédito de la cuenta")
     void testCreditoCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
         cuenta.credito(new BigDecimal(100));
@@ -69,6 +76,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("probando error por saldo insuficiente")
     void testSaldoInsuficienteExceptionCuenta() {
         Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
 
@@ -82,6 +90,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("probando transferencia de monto entre cuentas")
     void testTransferirDineroCuentas() {
         Cuenta cuenta1 = new Cuenta("John Doe", new BigDecimal("2500"));
         Cuenta cuenta2 = new Cuenta("Andres", new BigDecimal("1500.8989"));
@@ -95,8 +104,11 @@ class CuentaTest {
                   () -> assertEquals("3000", cuenta1.getSaldo().toPlainString()));
     }
 
+    @Disabled
     @Test
+    @DisplayName("probando las relaciones entre el banco y sus cuentas")
     void testRelacionBancoCuentas() {
+        fail();
         String nombreBanco = "Banco del Estado";
         Cuenta cuenta1 = new Cuenta("John Doe", new BigDecimal("2500"));
         Cuenta cuenta2 = new Cuenta("Andres", new BigDecimal("1500.8989"));
