@@ -27,9 +27,9 @@ class CuentaTest {
         Double expected = 1000.12345;
         Double actual = cuenta.getSaldo().doubleValue();
 
-        assertNotNull(cuenta.getSaldo());
-        assertEquals(expected, actual);
-        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
+        assertAll(() -> assertNotNull(cuenta.getSaldo()),
+                  () -> assertEquals(expected, actual),
+                  () -> assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0));
     }
 
     @Test
@@ -48,10 +48,10 @@ class CuentaTest {
         BigDecimal expected = new BigDecimal("900.12345");
         BigDecimal actual = cuenta.getSaldo();
 
-        assertNotNull(actual);
-        assertEquals(expected, actual);
-        assertEquals(900, actual.intValue());
-        assertEquals(expected.toPlainString(), actual.toPlainString());
+        assertAll(() -> assertNotNull(actual),
+                  () -> assertEquals(expected, actual),
+                  () -> assertEquals(900, actual.intValue()),
+                  () -> assertEquals(expected.toPlainString(), actual.toPlainString()));
     }
 
     @Test
@@ -62,10 +62,10 @@ class CuentaTest {
         BigDecimal expected = new BigDecimal("1100.12345");
         BigDecimal actual = cuenta.getSaldo();
 
-        assertNotNull(actual);
-        assertEquals(expected, actual);
-        assertEquals(1100, actual.intValue());
-        assertEquals(expected.toPlainString(), actual.toPlainString());
+        assertAll(() -> assertNotNull(actual),
+                  () -> assertEquals(expected, actual),
+                  () -> assertEquals(1100, actual.intValue()),
+                  () -> assertEquals(expected.toPlainString(), actual.toPlainString()));
     }
 
     @Test
@@ -91,8 +91,8 @@ class CuentaTest {
 
         banco.transferir(cuenta2, cuenta1, new BigDecimal(500));
 
-        assertEquals("1000.8989", cuenta2.getSaldo().toPlainString());
-        assertEquals("3000", cuenta1.getSaldo().toPlainString());
+        assertAll(() -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString()),
+                  () -> assertEquals("3000", cuenta1.getSaldo().toPlainString()));
     }
 
     @Test
@@ -108,17 +108,17 @@ class CuentaTest {
 
         banco.transferir(cuenta2, cuenta1, new BigDecimal(500));
 
-        assertEquals("1000.8989", cuenta2.getSaldo().toPlainString());
-        assertEquals("3000", cuenta1.getSaldo().toPlainString());
-        assertEquals(2, banco.getCuentas().size());
-        assertEquals(nombreBanco, cuenta1.getBanco().getNombre());
-        assertEquals(nombreBanco, cuenta2.getBanco().getNombre());
-        assertTrue(banco.getCuentas()
-                        .stream()
-                        .anyMatch(c -> c.getPersona().equals("John Doe")));
-        assertTrue(banco.getCuentas()
-                        .stream()
-                        .anyMatch(c -> c.getPersona().equals("Andres")));
+        assertAll(() -> assertEquals("3000", cuenta1.getSaldo().toPlainString()),
+                  () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString()),
+                  () -> assertEquals(2, banco.getCuentas().size()),
+                  () -> assertEquals(nombreBanco, cuenta1.getBanco().getNombre()),
+                  () -> assertEquals(nombreBanco, cuenta2.getBanco().getNombre()),
+                  () -> assertTrue(banco.getCuentas()
+                                        .stream()
+                                        .anyMatch(c -> c.getPersona().equals("John Doe"))),
+                  () -> assertTrue(banco.getCuentas()
+                                        .stream()
+                                        .anyMatch(c -> c.getPersona().equals("Andres"))));
     }
 
 }
