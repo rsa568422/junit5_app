@@ -16,8 +16,8 @@ class CuentaTest {
 
         String actual = cuenta.getPersona();
 
-        assertNotNull(actual);
-        assertEquals(expected, actual);
+        assertAll(() -> assertNotNull(actual, () -> "la cuenta no puede ser nula"),
+                  () -> assertEquals(expected, actual, () -> String.format("el nombre de la cuenta no es el que se esperaba, se esperaba %s y sin embargo fue %s", expected, actual)));
     }
 
     @Test
@@ -108,17 +108,17 @@ class CuentaTest {
 
         banco.transferir(cuenta2, cuenta1, new BigDecimal(500));
 
-        assertAll(() -> assertEquals("3000", cuenta1.getSaldo().toPlainString()),
-                  () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString()),
-                  () -> assertEquals(2, banco.getCuentas().size()),
-                  () -> assertEquals(nombreBanco, cuenta1.getBanco().getNombre()),
-                  () -> assertEquals(nombreBanco, cuenta2.getBanco().getNombre()),
+        assertAll(() -> assertEquals("3000", cuenta1.getSaldo().toPlainString(), () -> "el valor del saldo de la cuenta 1 no es el esperado"),
+                  () -> assertEquals("1000.8989", cuenta2.getSaldo().toPlainString(), () -> "el valor del saldo de la cuenta 2 no es el esperado"),
+                  () -> assertEquals(2, banco.getCuentas().size(), () -> "la cantidad de cuentas asociadas al banco no es la esperada"),
+                  () -> assertEquals(nombreBanco, cuenta1.getBanco().getNombre(), () -> "el nombre del banco asociado a la cuenta 1 no es el esperado"),
+                  () -> assertEquals(nombreBanco, cuenta2.getBanco().getNombre(), () -> "el nombre del banco asociado a la cuenta 2 no es el esperado"),
                   () -> assertTrue(banco.getCuentas()
                                         .stream()
-                                        .anyMatch(c -> c.getPersona().equals("John Doe"))),
+                                        .anyMatch(c -> c.getPersona().equals("John Doe")), () -> "el banco no contiene la cuenta de John Doe"),
                   () -> assertTrue(banco.getCuentas()
                                         .stream()
-                                        .anyMatch(c -> c.getPersona().equals("Andres"))));
+                                        .anyMatch(c -> c.getPersona().equals("Andres")), () -> "el banco no contiene la cuenta de Andres"));
     }
 
 }
