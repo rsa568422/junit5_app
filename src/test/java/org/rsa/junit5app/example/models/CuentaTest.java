@@ -1,6 +1,7 @@
 package org.rsa.junit5app.example.models;
 
 import org.junit.jupiter.api.Test;
+import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
 import java.math.BigDecimal;
 
@@ -65,6 +66,19 @@ class CuentaTest {
         assertEquals(expected, actual);
         assertEquals(1100, actual.intValue());
         assertEquals(expected.toPlainString(), actual.toPlainString());
+    }
+
+    @Test
+    void testSaldoInsuficienteExceptionCuenta() {
+        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
+
+        Exception exception = assertThrows(SaldoInsuficienteException.class,
+                                           () -> cuenta.debito(new BigDecimal(1500)));
+
+        String expected = "Saldo insuficiente";
+        String actual = exception.getMessage();
+
+        assertEquals(expected, actual);
     }
 
 }
