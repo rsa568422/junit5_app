@@ -5,6 +5,7 @@ import org.junit.jupiter.api.condition.*;
 import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -222,4 +223,35 @@ class CuentaTest {
     void testDev() {
 
     }
+
+    @Test
+    void imprimirVariablesAmbiente() {
+        Map<String, String> env = System.getenv();
+        env.forEach((key, value) -> System.out.printf("%s = %s\n", key, value));
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "JAVA_HOME", matches = ".*jdk-11.0.2.*")
+    void testJavaHome() {
+
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "NUMBER_OF_PROCESSORS", matches = "12")
+    void testProcesadores() {
+        fail();
+    }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "dev")
+    void testEnv() {
+        fail();
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
+    void testEnvProdDisabled() {
+        fail();
+    }
+
 }
