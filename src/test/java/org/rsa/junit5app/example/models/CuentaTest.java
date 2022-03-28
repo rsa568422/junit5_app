@@ -299,4 +299,22 @@ class CuentaTest {
         assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0);
     }
 
+    @RepeatedTest(value = 5, name = "{displayName}: {currentRepetition} de {totalRepetitions}")
+    @DisplayName("pruebas con repeticiones")
+    void testDebitoCuentaRepetir(RepetitionInfo info) {
+        if (info.getCurrentRepetition() == 3) {
+            System.out.printf("estamos en la repetición %d\n", info.getCurrentRepetition());
+        }
+
+        cuenta.debito(new BigDecimal(100));
+
+        BigDecimal expected = new BigDecimal("900.12345");
+        BigDecimal actual = cuenta.getSaldo();
+
+        assertAll(() -> assertNotNull(actual),
+                () -> assertEquals(expected, actual),
+                () -> assertEquals(900, actual.intValue()),
+                () -> assertEquals(expected.toPlainString(), actual.toPlainString()));
+    }
+
 }
