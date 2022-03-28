@@ -1,9 +1,11 @@
 package org.rsa.junit5app.example.models;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
 import java.math.BigDecimal;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -149,4 +151,75 @@ class CuentaTest {
                                         .anyMatch(c -> c.getPersona().equals("Andres")), () -> "el banco no contiene la cuenta de Andres"));
     }
 
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void testSoloWindows() {
+
+    }
+
+    @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void testSoloLinuxMac() {
+        fail();
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void testNoWindows() {
+        fail();
+    }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_8)
+    void soloJdk8() {
+        fail();
+    }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_11)
+    void testSoloJdk11() {
+
+    }
+
+    @Test
+    @DisabledOnJre(JRE.JAVA_11)
+    void testNoJdk11() {
+        fail();
+    }
+
+    @Test
+    void imprimirSystemProperties() {
+        Properties properties = System.getProperties();
+        properties.forEach((key, value) -> System.out.printf("%s:%s%n", key, value));
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "java.version", matches = "11.*.*")
+    void testJavaVersion() {
+
+    }
+
+    @Test
+    @DisabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void testSolo64() {
+
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "os.arch", matches = ".*32.*")
+    void testNo64() {
+        fail();
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "user.name", matches = "Roberto")
+    void testSoloRoberto() {
+
+    }
+
+    @Test
+    @EnabledIfSystemProperty(named = "ENV", matches = "dev")
+    void testDev() {
+
+    }
 }
