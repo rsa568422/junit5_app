@@ -7,9 +7,20 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CuentaTest {
 
     private Cuenta cuenta;
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("iniciando la clase CuentaTest");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("finalizando la clase CuentaTest");
+    }
 
     @BeforeEach
     void initMetodoTest() {
