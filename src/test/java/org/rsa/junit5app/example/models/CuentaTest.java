@@ -1,8 +1,6 @@
 package org.rsa.junit5app.example.models;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
 import java.math.BigDecimal;
@@ -11,13 +9,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CuentaTest {
 
+    private Cuenta cuenta;
+
+    @BeforeEach
+    void initMetodoTest() {
+        this.cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
+
+        System.out.println("iniciando test sobre Cuenta");
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("finalizando test sobre Cuenta");
+    }
+
     @Test
     @DisplayName("probando el nombre de la cuenta")
     void testNombreCuenta() {
         String expected = "Andres";
-        Cuenta cuenta = new Cuenta(expected, new BigDecimal("1000.12345"));
 
-        String actual = cuenta.getPersona();
+        String actual = this.cuenta.getPersona();
 
         assertAll(() -> assertNotNull(actual, () -> "la cuenta no puede ser nula"),
                   () -> assertEquals(expected, actual, () -> String.format("el nombre de la cuenta no es el que se esperaba, se esperaba %s y sin embargo fue %s", expected, actual)));
@@ -26,12 +37,10 @@ class CuentaTest {
     @Test
     @DisplayName("probando el saldo de la cuenta")
     void testSaldoCuenta() {
-        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
-
         Double expected = 1000.12345;
-        Double actual = cuenta.getSaldo().doubleValue();
+        Double actual = this.cuenta.getSaldo().doubleValue();
 
-        assertAll(() -> assertNotNull(cuenta.getSaldo()),
+        assertAll(() -> assertNotNull(this.cuenta.getSaldo()),
                   () -> assertEquals(expected, actual),
                   () -> assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0));
     }
@@ -48,11 +57,10 @@ class CuentaTest {
     @Test
     @DisplayName("probando el debito de la cuenta")
     void testDebitoCuenta() {
-        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
-        cuenta.debito(new BigDecimal(100));
+        this.cuenta.debito(new BigDecimal(100));
 
         BigDecimal expected = new BigDecimal("900.12345");
-        BigDecimal actual = cuenta.getSaldo();
+        BigDecimal actual = this.cuenta.getSaldo();
 
         assertAll(() -> assertNotNull(actual),
                   () -> assertEquals(expected, actual),
@@ -63,11 +71,10 @@ class CuentaTest {
     @Test
     @DisplayName("probando el crédito de la cuenta")
     void testCreditoCuenta() {
-        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
-        cuenta.credito(new BigDecimal(100));
+        this.cuenta.credito(new BigDecimal(100));
 
         BigDecimal expected = new BigDecimal("1100.12345");
-        BigDecimal actual = cuenta.getSaldo();
+        BigDecimal actual = this.cuenta.getSaldo();
 
         assertAll(() -> assertNotNull(actual),
                   () -> assertEquals(expected, actual),
@@ -78,10 +85,8 @@ class CuentaTest {
     @Test
     @DisplayName("probando error por saldo insuficiente")
     void testSaldoInsuficienteExceptionCuenta() {
-        Cuenta cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
-
         Exception exception = assertThrows(SaldoInsuficienteException.class,
-                                           () -> cuenta.debito(new BigDecimal(1500)));
+                                           () -> this.cuenta.debito(new BigDecimal(1500)));
 
         String expected = "Saldo insuficiente";
         String actual = exception.getMessage();
@@ -104,11 +109,11 @@ class CuentaTest {
                   () -> assertEquals("3000", cuenta1.getSaldo().toPlainString()));
     }
 
-    @Disabled
+    //@Disabled
     @Test
     @DisplayName("probando las relaciones entre el banco y sus cuentas")
     void testRelacionBancoCuentas() {
-        fail();
+        //fail();
         String nombreBanco = "Banco del Estado";
         Cuenta cuenta1 = new Cuenta("John Doe", new BigDecimal("2500"));
         Cuenta cuenta2 = new Cuenta("Andres", new BigDecimal("1500.8989"));
