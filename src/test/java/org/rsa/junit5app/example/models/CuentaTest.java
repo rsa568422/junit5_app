@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CuentaTest {
@@ -252,6 +253,31 @@ class CuentaTest {
     @EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
     void testEnvProdDisabled() {
         fail();
+    }
+
+    @Test
+    @DisplayName("testSaldoCuentaDev")
+    void testSaldoCuentaDev() {
+        boolean esDev = "dev".equals(System.getProperty("ENV"));
+        Double expected = 1000.12345;
+        Double actual = this.cuenta.getSaldo().doubleValue();
+        assumeTrue(esDev);
+        assertAll(() -> assertNotNull(this.cuenta.getSaldo()),
+                () -> assertEquals(expected, actual),
+                () -> assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0));
+    }
+
+    @Test
+    @DisplayName("testSaldoCuentaDev 2")
+    void testSaldoCuentaDev2() {
+        boolean esDev = "dev".equals(System.getProperty("ENV"));
+        Double expected = 1000.12345;
+        Double actual = this.cuenta.getSaldo().doubleValue();
+        assumingThat(esDev, () -> {
+            assertAll(() -> assertNotNull(this.cuenta.getSaldo()),
+                    () -> assertEquals(expected, actual));
+        });
+        assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0);
     }
 
 }
