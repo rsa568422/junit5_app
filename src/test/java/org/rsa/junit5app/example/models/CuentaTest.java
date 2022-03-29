@@ -2,6 +2,8 @@ package org.rsa.junit5app.example.models;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
 import java.math.BigDecimal;
@@ -315,6 +317,17 @@ class CuentaTest {
                 () -> assertEquals(expected, actual),
                 () -> assertEquals(900, actual.intValue()),
                 () -> assertEquals(expected.toPlainString(), actual.toPlainString()));
+    }
+
+    @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+    @ValueSource(strings = {"100", "200", "300", "500", "750", "1000.12345"})
+    void testDebitoCuenta(String monto) {
+        cuenta.debito(new BigDecimal(monto));
+
+        BigDecimal actual = cuenta.getSaldo();
+
+        assertAll(() -> assertNotNull(actual),
+                () -> assertTrue(cuenta.getSaldo().compareTo(BigDecimal.ZERO) > 0));
     }
 
 }
