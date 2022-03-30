@@ -46,6 +46,7 @@ class CuentaTest {
     }
 
     @Nested
+    @Tag("cuenta")
     @DisplayName("probando atributos de la cuenta")
     class CuentaNombreSaldo {
         @Test
@@ -83,6 +84,7 @@ class CuentaTest {
     @Nested
     class CuentaOperaciones {
         @Test
+        @Tag("cuenta")
         @DisplayName("probando el debito de la cuenta")
         void testDebitoCuenta() {
             cuenta.debito(new BigDecimal(100));
@@ -97,6 +99,8 @@ class CuentaTest {
         }
 
         @Test
+        @Tag("cuenta")
+        @Tag("banco")
         @DisplayName("probando el crédito de la cuenta")
         void testCreditoCuenta() {
             cuenta.credito(new BigDecimal(100));
@@ -111,6 +115,7 @@ class CuentaTest {
         }
 
         @Test
+        @Tag("banco")
         @DisplayName("probando transferencia de monto entre cuentas")
         void testTransferirDineroCuentas() {
             Cuenta cuenta1 = new Cuenta("John Doe", new BigDecimal("2500"));
@@ -127,6 +132,8 @@ class CuentaTest {
     }
 
     @Test
+    @Tag("cuenta")
+    @Tag("error")
     @DisplayName("probando error por saldo insuficiente")
     void testSaldoInsuficienteExceptionCuenta() {
         Exception exception = assertThrows(SaldoInsuficienteException.class,
@@ -324,6 +331,7 @@ class CuentaTest {
                 () -> assertEquals(expected.toPlainString(), actual.toPlainString()));
     }
 
+    @Tag("param")
     @Nested
     class PruebasParametrizadasTest {
         @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
@@ -388,6 +396,7 @@ class CuentaTest {
         }
     }
 
+    @Tag("param")
     @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
     @MethodSource("montoList")
     void testDebitoCuentaMethodSource(String monto) {
