@@ -10,10 +10,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.rsa.junit5app.example.exceptions.SaldoInsuficienteException;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
@@ -341,8 +343,8 @@ class CuentaTest {
                 () -> assertEquals(expected.toPlainString(), actual.toPlainString()));
     }
 
-    @Tag("param")
     @Nested
+    @Tag("param")
     class PruebasParametrizadasTest {
         @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
         @ValueSource(strings = {"100", "200", "300", "500", "750", "1000.1234"})
@@ -406,8 +408,8 @@ class CuentaTest {
         }
     }
 
-    @Tag("param")
     @ParameterizedTest(name = "numero {index} ejecutando con valor {0} - {argumentsWithNames}")
+    @Tag("param")
     @MethodSource("montoList")
     void testDebitoCuentaMethodSource(String monto) {
         cuenta.debito(new BigDecimal(monto));
@@ -420,6 +422,26 @@ class CuentaTest {
 
     private static List<String> montoList() {
         return Arrays.asList("100", "200", "300", "500", "750", "1000.1234");
+    }
+
+    @Nested
+    @Tag("timeout")
+    class EjemploTimeoutTest {
+        @Test
+        @Timeout(1)
+        void pruebasTimeOut() throws InterruptedException {
+            TimeUnit.MILLISECONDS.sleep(950);
+        }
+        @Test
+        @Timeout(value = 1000, unit = TimeUnit.MILLISECONDS)
+        void pruebasTimeOut2() throws InterruptedException {
+            TimeUnit.MILLISECONDS.sleep(950);
+        }
+
+        @Test
+        void testTimeOutAssertions() {
+            assertTimeout(Duration.ofSeconds(5), () -> TimeUnit.MILLISECONDS.sleep(1000));
+        }
     }
 
 }
