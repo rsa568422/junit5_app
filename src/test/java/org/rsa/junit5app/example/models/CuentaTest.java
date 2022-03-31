@@ -18,10 +18,13 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
 
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class CuentaTest {
 
     private Cuenta cuenta;
+
+    private TestInfo testInfo;
+    private TestReporter testReporter;
 
     @BeforeAll
     static void beforeAll() {
@@ -34,10 +37,12 @@ class CuentaTest {
     }
 
     @BeforeEach
-    void initMetodoTest() {
+    void initMetodoTest(TestInfo testInfo, TestReporter testReporter) {
         this.cuenta = new Cuenta("Andres", new BigDecimal("1000.12345"));
-
+        this.testInfo = testInfo;
+        this.testReporter = testReporter;
         System.out.println("iniciando test sobre Cuenta");
+        testReporter.publishEntry(String.format("ejecutando: %s %s con las etiquetas %s", testInfo.getDisplayName(), testInfo.getTestMethod().orElse(null).getName(), testInfo.getTags()));
     }
 
     @AfterEach
@@ -52,6 +57,11 @@ class CuentaTest {
         @Test
         @DisplayName("nombre de la cuenta")
         void testNombreCuenta() {
+            testReporter.publishEntry(testInfo.getTags().toString());
+            if (testInfo.getTags().contains("cuenta")) {
+                testReporter.publishEntry("hacemos algo con la etiqueta cuenta");
+            }
+
             String expected = "Andres";
 
             String actual = cuenta.getPersona();
